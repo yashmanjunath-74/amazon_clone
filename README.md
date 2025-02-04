@@ -6,11 +6,25 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+🛒 Full-Stack E-Commerce App (Amazon Clone)
+🚀 A fully functional e-commerce platform inspired by Amazon, featuring user authentication, product management, cart system, order processing, payment integration, and an admin dashboard for complete store control.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+🔥 Features
+User Panel
+✅ User Authentication (Login/Register)
+✅ Browse & Search Products
+✅ Add to Cart & Wishlist
+✅ Secure Checkout & Payment Integration (Stripe/PayPal)
+✅ Order History & Tracking
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Admin Panel
+✅ Manage Products (CRUD operations)
+✅ Manage Users & Roles
+✅ Order Management & Processing
+✅ Inventory & Stock Management
+✅ Sales Analytics Dashboard
+
+Tech Stack
+Frontend: flutter
+Backend: Node.js (Express.js) 
+Database: MongoDB

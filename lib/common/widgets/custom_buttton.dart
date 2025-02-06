@@ -10,10 +10,6 @@ class CustomButtton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: Text(
-        text,
-        style: TextStyle(color: Colors.white),
-      ),
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: GlobalVariables.secondaryColor,
@@ -24,6 +20,10 @@ class CustomButtton extends StatelessWidget {
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

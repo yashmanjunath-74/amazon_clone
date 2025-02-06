@@ -21,7 +21,9 @@ class CustomTextfield extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      validator: (value) {},
+      validator: (value) {
+        return null;
+      },
     );
   }
 }

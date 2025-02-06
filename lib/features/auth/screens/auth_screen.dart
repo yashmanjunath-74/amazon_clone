@@ -1,6 +1,7 @@
 import 'package:amazon_clone/common/widgets/custom_buttton.dart';
 import 'package:amazon_clone/common/widgets/custom_textfield.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
+import 'package:amazon_clone/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 enum Auth {
@@ -25,12 +26,23 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
+  final AuthService authService = AuthService();
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
     super.dispose();
+  }
+
+  void signupUser() {
+    authService.signUpUser(
+      context: context,
+      email: _emailController.text,
+      password: _passwordController.text,
+      name: _nameController.text,
+    );
   }
 
   @override
@@ -83,7 +95,13 @@ class _AuthScreenState extends State<AuthScreen> {
                             controller: _passwordController,
                             hintText: 'Password'),
                         const SizedBox(height: 10),
-                        CustomButtton(text: 'Sign up', onTap: () {})
+                        CustomButtton(
+                            text: 'Sign up',
+                            onTap: () {
+                              if (_signUpFormKey.currentState!.validate()) {
+                                signupUser();
+                              }
+                            })
                       ],
                     )),
               ),
@@ -105,7 +123,7 @@ class _AuthScreenState extends State<AuthScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 child: Form(
-                    key: _signUpFormKey,
+                    key: _signInFormKey,
                     child: Column(
                       children: <Widget>[
                         CustomTextfield(

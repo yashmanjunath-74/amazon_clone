@@ -91,10 +91,6 @@ class AuthService {
     try {
       SharedPreferences Prefs = await SharedPreferences.getInstance();
       String? token = Prefs.getString('x-auth-token');
-
-      if (token == null) {
-        Prefs.setString('x-auth-token', '');
-      }
       var tokenRes = await http.post(
         Uri.parse('$uri/tokenIsValid'),
         headers: <String, String>{

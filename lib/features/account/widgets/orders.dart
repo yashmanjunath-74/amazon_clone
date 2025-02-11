@@ -1,4 +1,5 @@
 import 'package:amazon_clone/constants/global_variables.dart';
+import 'package:amazon_clone/features/account/widgets/single_product.dart';
 import 'package:flutter/material.dart';
 
 class Orders extends StatefulWidget {
@@ -9,6 +10,12 @@ class Orders extends StatefulWidget {
 }
 
 class _OrdersState extends State<Orders> {
+  List list = [
+    'https://images.unsplash.com/photo-1566579090262-51cde5ebe92e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfEJuLURqcmNCcndvfHxlbnwwfHx8fHw%3D',
+    'https://images.unsplash.com/photo-1566579090262-51cde5ebe92e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfEJuLURqcmNCcndvfHxlbnwwfHx8fHw%3D',
+    'https://images.unsplash.com/photo-1566579090262-51cde5ebe92e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfEJuLURqcmNCcndvfHxlbnwwfHx8fHw%3D',
+    'https://images.unsplash.com/photo-1566579090262-51cde5ebe92e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDEyfEJuLURqcmNCcndvfHxlbnwwfHx8fHw%3D',
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -33,6 +40,19 @@ class _OrdersState extends State<Orders> {
               ),
             ),
           ],
+        ),
+        Container(
+          height: 170,
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.only(left: 10, top: 20, right: 0),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return SingleProduct(
+                  image: list[index],
+                );
+              }),
         )
       ],
     );

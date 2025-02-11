@@ -13,11 +13,10 @@ class AccountButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         height: 40,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 0.0),
-            borderRadius: BorderRadius.circular(50),
-            color: Colors.white),
+            borderRadius: BorderRadius.circular(50), color: Colors.white),
         child: OutlinedButton(
             style: ElevatedButton.styleFrom(
+              // ignore: deprecated_member_use
               backgroundColor: GlobalVariables.secondaryColor.withOpacity(0.70),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),

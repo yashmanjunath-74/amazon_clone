@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PostsScreen extends StatefulWidget {
-  const PostsScreen({super.key});
+class ProductScreen extends StatefulWidget {
+  const ProductScreen({super.key});
 
   @override
-  State<PostsScreen> createState() => _PostsScreenState();
+  State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _PostsScreenState extends State<PostsScreen> {
+class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

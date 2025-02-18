@@ -19,8 +19,8 @@ class _ProductScreenState extends State<ProductScreen> {
         onPressed: () {
           Navigator.pushNamed(context, AddProductScreen.routeName);
         },
-        child: Icon(Icons.add),
         tooltip: 'Add product',
+        child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

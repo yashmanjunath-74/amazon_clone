@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 //IMPORTING FROM OTHER FILES
 const authRouter = require('./routes/auth');
+const adminRouter = require('./routes/admin');
 
 
 
@@ -17,6 +18,7 @@ const DB = "mongodb+srv://yash:yash2005@cluster0.i4siy.mongodb.net/?retryWrites=
 // MIDDELWARESrs
 app.use(express.json());
 app.use(authRouter);
+app.use(adminRouter);
 
 app.get('/yash', (req, res) => {    
     res.send('Hello World!');

@@ -87,7 +87,27 @@ class _CategoryDealsState extends State<CategoryDeals> {
                                   child: Image.network(product.images[0]),
                                 ),
                               ),
-                            )
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(
+                                  left: 0, top: 5, right: 15),
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                product.productName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(left: 0, right: 15),
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                product.price.toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         );
                       }),

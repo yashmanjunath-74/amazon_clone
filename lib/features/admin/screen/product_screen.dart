@@ -16,6 +16,7 @@ class _ProductScreenState extends State<ProductScreen> {
   List<ProductModel> ProductList = [];
   final AdminServices adminServices = AdminServices();
 
+  @override
   void initState() {
     super.initState();
     fetchallproduct();
@@ -31,7 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
         context: context,
         Product: product,
         Onsuccess: () {
-          ProductList!.removeAt(index);
+          ProductList.removeAt(index);
           setState(() {});
         });
   }
@@ -48,7 +49,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
                   itemBuilder: (context, index) {
-                    final productData = ProductList![index];
+                    final productData = ProductList[index];
                     return Column(
                       children: [
                         SizedBox(

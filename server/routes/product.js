@@ -16,20 +16,26 @@ productRouter.get('/api/product',Auth, async (req,res)=>{
         
    });
 
-   productRouter.get('/api/product/search/:name',Auth, async (req,res)=>{
-      try{
-       console.log(req.query.category);
-       const product = await Product.find({ 
-       name: { $regex : req.params.name , $options:"i" }
-       });
-       console.log(product);
-       res.json(product);
-       
-      }catch(e){
-         res.status(500).json({error:e.message});
-      }
+   productRouter.get('/api/product/search/:productName', Auth, async (req, res) => {
+      try {
+          console.log(req.params.productName);
           
-     });
+          const products = await Product.find({
+            productName: { $regex: req.params.productName, $options: "i" }
+          });
+  
+          if (!products.length) {
+              return res.status(404).json({ message: "No products found" });
+          }
+  
+          console.log(products);
+          res.json(products);
+  
+      } catch (e) {
+          res.status(500).json({ error: e.message });
+      }
+  });
+  
 
 
 

@@ -73,7 +73,7 @@ class _CategoryDealsState extends State<CategoryDeals> {
                         mainAxisSpacing: 10,
                       ),
                       itemBuilder: (context, index) {
-                        var product = productList![index];
+                        var product = productList[index];
                         return Column(
                           children: [
                             SizedBox(

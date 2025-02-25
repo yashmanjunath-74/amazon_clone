@@ -37,6 +37,33 @@ productRouter.get('/api/product',Auth, async (req,res)=>{
   });
   
 
+  productRouter.post('/api/rate-product', Auth, async (req, res) => {
+    try {
+        const { id, rating } = req.body;
+        let product = await Product.findById(id);
+
+        for (let i = 0; i < product.rating.length; i++) {
+            if (String(product.rating[i].userId) === String(req.user)) {
+                product.rating.splice(i, 1);
+                break;
+            }
+        }
+
+        const ratingSchema = {
+            userId: req.user,
+            rating
+        };
+
+        product.rating.push(ratingSchema);
+        product = await product.save();
+        console.log(product);
+        res.json(product);
+
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 
 
 module.exports= productRouter;

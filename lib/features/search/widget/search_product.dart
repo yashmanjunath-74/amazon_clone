@@ -8,6 +8,19 @@ class SearchProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double avgrating = 0;
+    double totalrating = 0;
+    for (int i = 0; i < product.rating!.length; i++) {
+      totalrating += product.rating![i].rating;
+
+      if (totalrating != 0) {
+        avgrating = totalrating / product.rating!.length;
+      } else {
+        avgrating = 0;
+      }
+      print(avgrating);
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -49,7 +62,7 @@ class SearchProduct extends StatelessWidget {
                   Container(
                     width: 235,
                     padding: const EdgeInsets.only(left: 10, top: 5),
-                    child: const Rating(rating: 5),
+                    child: Rating(rating: avgrating),
                   ),
                   Container(
                     width: 235,

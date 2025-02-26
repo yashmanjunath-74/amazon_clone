@@ -4,9 +4,11 @@ import 'package:amazon_clone/constants/global_variables.dart';
 import 'package:amazon_clone/features/product_deatails/services/product_services.dart';
 import 'package:amazon_clone/features/search/screens/search_screen.dart';
 import 'package:amazon_clone/models/product_model.dart';
+import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class ProductDeatailsScreen extends StatefulWidget {
   static const String routeName = '/product-details';
@@ -19,6 +21,27 @@ class ProductDeatailsScreen extends StatefulWidget {
 
 class _ProductDeatailsScreenState extends State<ProductDeatailsScreen> {
   final ProductServices productServices = ProductServices();
+  double avgrating = 0;
+  double myRating = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    double totalrating = 0;
+    for (int i = 0; i < widget.product.rating!.length; i++) {
+      totalrating += widget.product.rating![i].rating;
+      if (widget.product.rating![i].userId ==
+          Provider.of<UserProvider>(context, listen: false).user.id) {
+        myRating = widget.product.rating![i].rating;
+      }
+    }
+    if (totalrating != 0) {
+      avgrating = totalrating / widget.product.rating!.length;
+    } else {
+      avgrating = 0;
+    }
+  }
 
   void NavigateToSearchScreen(String searchQuery) {
     Navigator.pushNamed(context, SearchScreen.routeName,
@@ -95,7 +118,7 @@ class _ProductDeatailsScreenState extends State<ProductDeatailsScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text(widget.product.id!), Rating(rating: 4)],
+              children: [Text(widget.product.id!), Rating(rating: avgrating)],
             ),
           ),
           Padding(
@@ -179,7 +202,7 @@ class _ProductDeatailsScreenState extends State<ProductDeatailsScreen> {
             ),
           ),
           RatingBar.builder(
-            initialRating: 0,
+            initialRating: myRating,
             maxRating: 1,
             direction: Axis.horizontal,
             allowHalfRating: true,

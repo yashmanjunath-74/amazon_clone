@@ -1,6 +1,6 @@
 const express = require('express');
 const Auth = require('../middlewares/auth');
-const Product = require('../models/product');
+const {Product} = require('../models/product');
 const productRouter =express.Router();
 
 productRouter.get('/api/product',Auth, async (req,res)=>{
@@ -65,5 +65,20 @@ productRouter.get('/api/product',Auth, async (req,res)=>{
 });
 
 
+productRouter.get('/api/deal_of_day', Auth, async (req, res) => {
+ 
+try{
+       
+    let products = await Product.find({});
+    products = products.sort((a, b) => {
+        return b.rating.length - a.rating.length;
+    });
+    console.log(products[0]);
+    res.json(products[0]);
+
+}catch(e){
+    res.status(500).json({error:e.message});
+}
+});
 
 module.exports= productRouter;

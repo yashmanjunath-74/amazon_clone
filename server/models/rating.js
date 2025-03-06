@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ratingShema = new mongoose.Schema({
+const ratingSchema = new mongoose.Schema({
     userId:{
         type: String,
         required: true,
@@ -11,4 +11,4 @@ const ratingShema = new mongoose.Schema({
     }
 });
 
-module.exports= ratingShema;
+module.exports= ratingSchema;

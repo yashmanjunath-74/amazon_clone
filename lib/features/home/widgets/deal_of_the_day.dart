@@ -1,3 +1,7 @@
+import 'package:amazon_clone/common/widgets/loader.dart';
+import 'package:amazon_clone/features/home/service/home_service.dart';
+import 'package:amazon_clone/features/product_deatails/screen/product_deatails_screen.dart';
+import 'package:amazon_clone/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class DealOfTheDay extends StatefulWidget {
@@ -8,93 +12,100 @@ class DealOfTheDay extends StatefulWidget {
 }
 
 class _DealOfTheDayState extends State<DealOfTheDay> {
+  ProductModel? product;
+
+  HomeService homeService = HomeService();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchDealOftheDay();
+  }
+
+  void fetchDealOftheDay() async {
+    product = await homeService.fetchDealOftheDay(context: context);
+  }
+
+  void navigateToProductDetails() {
+    Navigator.pushNamed(context, ProductDeatailsScreen.routeName,
+        arguments: product);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.only(left: 10, top: 15),
-          child: const Text(
-            'Deal  of the day',
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-        Image.network(
-          'https://images.samsung.com/in/smartphones/galaxy-s25-ultra/buy/product_color_jetBlack_PC.png?imbypass=true',
-          height: 235,
-          fit: BoxFit.fitHeight,
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.only(left: 15),
-          child: Row(children: const [
-            Text('₹'),
-            SizedBox(width: 5),
-            Text(
-              '70000',
-              style: TextStyle(fontSize: 18),
-            ),
-          ]),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.only(left: 15, top: 5, right: 40),
-          child: const Text(
-            'Samsung',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.network(
-                'https://images.samsung.com/is/image/samsung/p6pim/in/2501/gallery/in-galaxy-s25-s938-sm-s938bakcins-544703062?imbypass=true',
-                fit: BoxFit.fitWidth,
-                width: 100,
-              ),
-              Image.network(
-                'https://images.samsung.com/is/image/samsung/p6pim/in/2501/gallery/in-galaxy-s25-s938-sm-s938bakcins-544703027?imbypass=true',
-                fit: BoxFit.fitWidth,
-                width: 100,
-              ),
-              Image.network(
-                'https://images.samsung.com/is/image/samsung/p6pim/in/2501/gallery/in-galaxy-s25-s938-sm-s938bakcins-544703030?imbypass=true',
-                fit: BoxFit.fitWidth,
-                width: 100,
-              ),
-              Image.network(
-                'https://images.samsung.com/is/image/samsung/p6pim/in/2501/gallery/in-galaxy-s25-s938-sm-s938bakcins-544703028?imbypass=true',
-                fit: BoxFit.fitWidth,
-                width: 100,
-              ),
-              Image.network(
-                'https://images.samsung.com/is/image/samsung/p6pim/in/2501/gallery/in-galaxy-s25-s938-sm-s938bakcins-544703029?imbypass=true',
-                fit: BoxFit.fitWidth,
-                width: 100,
-              ),
-              Image.network(
-                'https://images.samsung.com/is/image/samsung/p6pim/in/2501/gallery/in-galaxy-s25-s938-sm-s938bakcins-544703031?imbypass=true',
-                fit: BoxFit.fitWidth,
-                width: 100,
-              ),
-            ],
-          ),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.symmetric(
-            vertical: 15,
-          ).copyWith(left: 15),
-          child: Text(
-            'see all ',
-            style: TextStyle(color: Colors.cyan[800]),
-          ),
-        )
-      ],
-    );
+    return product == null
+        ? const Loader()
+        : product!.productName.isEmpty
+            ? SizedBox()
+            : GestureDetector(
+                onTap: navigateToProductDetails,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.only(left: 10, top: 15),
+                      child: const Text(
+                        'Deal  of the day',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Image.network(
+                      product!.images[0],
+                      height: 235,
+                      fit: BoxFit.fitHeight,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Row(children: [
+                        const Text('₹'),
+                        const SizedBox(width: 5),
+                        Text(
+                          product!.price.toString(),
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ]),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding:
+                          const EdgeInsets.only(left: 15, top: 5, right: 40),
+                      child: Text(
+                        product!.productName,
+                        style: TextStyle(fontSize: 16),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: product!.images
+                            .map(
+                              (e) => Image.network(
+                                e,
+                                height: 100,
+                                fit: BoxFit.fitWidth,
+                                width: 100,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                      ).copyWith(left: 15),
+                      child: Text(
+                        'see all ',
+                        style: TextStyle(color: Colors.cyan[800]),
+                      ),
+                    )
+                  ],
+                ),
+              );
   }
 }

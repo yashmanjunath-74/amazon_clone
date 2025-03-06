@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class HomeService {
+  // Fetch  categary  products
   Future<List<ProductModel>> fetchCategaryProduct(
       {required BuildContext context, required String category}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -40,5 +41,37 @@ class HomeService {
       showSnackBar(context, e.toString());
     }
     return productList;
+  }
+
+  // Fetch deal-of-the-day products
+
+  Future<ProductModel> fetchDealOftheDay(
+      {required BuildContext context}) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    ProductModel product = ProductModel(
+        productName: '',
+        price: 0,
+        quantity: 0,
+        description: '',
+        category: '',
+        images: []);
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/api/deal_of_day'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            product = ProductModel.fromJson(res.body);
+          });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return product;
   }
 }

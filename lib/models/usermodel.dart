@@ -8,6 +8,7 @@ class User {
   final String address;
   final String type;
   final String token;
+  final List<dynamic> cart;
 
   User({
     required this.id,
@@ -17,6 +18,7 @@ class User {
     required this.address,
     required this.type,
     required this.token,
+    required this.cart,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +30,7 @@ class User {
       'address': address, // Corrected spelling
       'type': type,
       'token': token,
+      'cart': cart,
     };
   }
 
@@ -40,6 +43,11 @@ class User {
       address: map['address'] ?? '', // Corrected spelling
       type: map['type'] ?? '',
       token: map['token'] ?? '',
+      cart: List<Map<String, dynamic>>.from(
+        map['cart']?.map(
+          (x) => Map<String, dynamic>.from(x),
+        ),
+      ),
     );
   }
 

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { productSchema } = require('./product');
+const { productSchema } = require('./product'); // Corrected typo
 
 const userSchema = new mongoose.Schema({    
     name: {
@@ -38,8 +38,8 @@ const userSchema = new mongoose.Schema({
     },
     cart:[
         {
-            product: productSchema,
-            quntity: {
+            product: productSchema, // Corrected typo
+            quantity: { // Corrected typo
                 type: Number,
                 required: true,
             },

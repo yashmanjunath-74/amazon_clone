@@ -1,3 +1,5 @@
+import 'package:amazon_clone/features/cart/services/cart_services.dart';
+import 'package:amazon_clone/features/product_deatails/services/product_services.dart';
 import 'package:amazon_clone/models/product_model.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,18 @@ class _CartProductState extends State<CartProduct> {
   Widget build(BuildContext context) {
     final productCart = context.watch<UserProvider>().user.cart[widget.index];
     final product = ProductModel.fromMap(productCart['product']);
+    final quantity = productCart['quantity'];
+
+    final ProductServices productServices = ProductServices();
+    final CartServices cartServices = CartServices();
+
+    void increaseQuantity(ProductModel product) {
+      productServices.addToCart(context: context, product: product);
+    }
+
+    void decreaseQuantity(ProductModel product) {
+      cartServices.DeleteFormCart(context: context, product: product);
+    }
 
     return Column(
       children: [
@@ -73,6 +87,67 @@ class _CartProductState extends State<CartProduct> {
               ],
             )
           ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black12, width: 1.5),
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.black12,
+                ),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () => decreaseQuantity(product),
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.remove_outlined,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black12, width: 1.5),
+                      ),
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        alignment: Alignment.center,
+                        child: Text(
+                          quantity.toString(),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => increaseQuantity(product),
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.add_outlined,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         )
       ],
     );

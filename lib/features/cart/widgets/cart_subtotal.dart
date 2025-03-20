@@ -1,4 +1,5 @@
 import 'package:amazon_clone/constants/global_variables.dart';
+import 'package:amazon_clone/features/address/screens/address_screen.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,11 @@ class Subtotal extends StatelessWidget {
         sum += quantity * price;
       }
     });
+
+    navigatetoAddressScreen(BuildContext context, int sum) {
+      Navigator.pushNamed(context, AddressScreen.routeName,
+          arguments: sum.toString());
+    }
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -50,7 +56,7 @@ class Subtotal extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Add your checkout logic here
+              navigatetoAddressScreen(context, sum);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor:

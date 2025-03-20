@@ -80,6 +80,11 @@ class _AddressScreenState extends State<AddressScreen> {
           .isEmpty) {
         addressServices.saveUserAddress(
             context: context, address: addressToBeUsed);
+
+        addressServices.placeOrder(
+            context: context,
+            address: addressToBeUsed,
+            totalSum: double.parse(widget.totalamount));
       }
     }
 
@@ -186,12 +191,12 @@ class _AddressScreenState extends State<AddressScreen> {
                       width: double.infinity,
                       paymentConfiguration: snapshot.data!,
                       paymentItems: paymentItems,
-                      onPaymentResult: (result) {},
                       type: GooglePayButtonType.buy,
                       buttonProvider: PayProvider.google_pay,
                       loadingIndicator: const Center(
                         child: CircularProgressIndicator(),
                       ),
+                      onPaymentResult: onGooglePayResult,
                     );
                   } else {
                     return CircularProgressIndicator();

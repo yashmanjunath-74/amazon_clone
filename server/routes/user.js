@@ -3,6 +3,7 @@ const userRouter = express.Router();
 const Auth = require('../middlewares/auth');
 const { Product } = require('../models/product');  // Import Product model
 const User = require('../models/user'); // Import User model
+const { Order } = require('../models/order');
 
 userRouter.post("/api/add-to-cart", Auth, async (req, res) => {
     try {
@@ -64,5 +65,54 @@ userRouter.post("/api/add-to-cart", Auth, async (req, res) => {
     }
   });
 
+
+  userRouter.post("/api/save-user-address", Auth, async (req, res) => {
+    try{
+       const { address } = req.body;
+        let user = await User.findById(req.user);
+        user.address = address; 
+        user = await user.save();
+        res.json(user);
+    }catch(e){
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+
+  userRouter.post("/api/order", Auth, async (req, res) => {
+    try{
+       const {cart,totalPrice, address } = req.body;
+       let products = [];
+
+       for(let i = 0; i< cart.length ; i++){
+        let product = await Product.findById(cart[i].product._id);
+        if(product.quantity >= cart[i].quantity){
+          product.quantity -= cart[i].quantity;
+          products.push({ product , quantity : cart[i].quantity});
+          await product.save();
+        }
+        else{
+          return res.status(400).json({message : `${product.name} is out of the stock`});
+        }
+       }
+     let user = await User.findById(req.user);
+     user.cart =[];
+     user = await user.save();
+
+     let order = new Order({
+         products,
+         totalPrice,
+         address,
+         userId : req.user,
+         orderedAt : new Date().getTime(),
+
+        }); 
+        order = await order.save();
+        res.json(order);
+ 
+    }catch(e){
+      res.status(500).json({ error: e.message});
+    }
+  });
 
 module.exports = userRouter;

@@ -44,7 +44,6 @@ class AddressServices {
     }
   }
 
-
   void placeOrder({
     required BuildContext context,
     required String address,

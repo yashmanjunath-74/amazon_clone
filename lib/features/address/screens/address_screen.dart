@@ -25,31 +25,25 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController cityController = TextEditingController();
   final _addressFormKey = GlobalKey<FormState>();
 
+  List<PaymentItem> paymentItems = [];
+
+  final AddressServices addressServices = AddressServices();
+
+  @override
+  void initState() {
+    super.initState();
+    paymentItems.add(PaymentItem(
+        amount: widget.totalamount,
+        label: 'Total amount ',
+        status: PaymentItemStatus.final_price));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final addres = context.watch<UserProvider>().user.address;
+    var address = context.watch<UserProvider>().user.address;
+    print('Fetched address: $address');
 
     String addressToBeUsed = "";
-
-    List<PaymentItem> paymentItems = [];
-
-    final AddressServices addressServices = AddressServices();
-
-    void initState() {
-      super.initState();
-      paymentItems.add(PaymentItem(
-          amount: widget.totalamount,
-          label: 'Total amount ',
-          status: PaymentItemStatus.final_price));
-    }
-
-    @override
-    void dispose() {
-      super.dispose();
-      flatBuildingController.dispose();
-      areaController.dispose();
-      pincodeController.dispose();
-      cityController.dispose();
-    }
 
     void payPressed(String addressFromProvider) {
       addressToBeUsed = "";
@@ -70,7 +64,7 @@ class _AddressScreenState extends State<AddressScreen> {
       } else {
         showSnackBar(context, 'ERROR');
       }
-      print(addressToBeUsed);
+      print('Address to be used: $addressToBeUsed');
     }
 
     void onGooglePayResult(res) {
@@ -145,7 +139,8 @@ class _AddressScreenState extends State<AddressScreen> {
                 ),
                 child: Container(
                   width: double.infinity,
-                  child: Text(addres),
+                  child: Text(
+                      address.isNotEmpty ? address : 'No address available'),
                 ),
               ),
               SizedBox(
@@ -159,48 +154,65 @@ class _AddressScreenState extends State<AddressScreen> {
                 height: 20,
               ),
               Form(
-                child: Form(
-                    key: _addressFormKey,
-                    child: Column(
-                      children: <Widget>[
-                        CustomTextfield(
-                            controller: flatBuildingController,
-                            hintText: 'Flat,House no , Building'),
-                        const SizedBox(height: 10),
-                        CustomTextfield(
-                            controller: areaController,
-                            hintText: 'Area,Street'),
-                        const SizedBox(height: 10),
-                        CustomTextfield(
-                            controller: pincodeController, hintText: 'Pincode'),
-                        const SizedBox(height: 10),
-                        CustomTextfield(
-                            controller: cityController, hintText: 'TownCity'),
-                        const SizedBox(height: 10),
-                      ],
-                    )),
+                key: _addressFormKey,
+                child: Column(
+                  children: <Widget>[
+                    CustomTextfield(
+                        controller: flatBuildingController,
+                        hintText: 'Flat,House no , Building'),
+                    const SizedBox(height: 10),
+                    CustomTextfield(
+                        controller: areaController, hintText: 'Area,Street'),
+                    const SizedBox(height: 10),
+                    CustomTextfield(
+                        controller: pincodeController, hintText: 'Pincode'),
+                    const SizedBox(height: 10),
+                    CustomTextfield(
+                        controller: cityController, hintText: 'TownCity'),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
               FutureBuilder<PaymentConfiguration>(
                 future: PaymentConfiguration.fromAsset('gpay.json'),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    return GooglePayButton(
-                      onPressed: () => payPressed(addres),
-                      width: double.infinity,
-                      paymentConfiguration: snapshot.data!,
-                      paymentItems: paymentItems,
-                      type: GooglePayButtonType.buy,
-                      buttonProvider: PayProvider.google_pay,
-                      loadingIndicator: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      onPaymentResult: onGooglePayResult,
-                    );
-                  } else {
-                    return CircularProgressIndicator();
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          GooglePayButton(
+                            onPressed: () => payPressed(address),
+                            width: double.infinity,
+                            paymentConfiguration: snapshot.data!,
+                            paymentItems: paymentItems,
+                            type: GooglePayButtonType.buy,
+                            buttonProvider: PayProvider.google_pay,
+                            loadingIndicator: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            onPaymentResult: onGooglePayResult,
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              payPressed(address);
+                              onGooglePayResult(null);
+                            },
+                            child: Text('Cash on Delivery',
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              minimumSize: Size(double.infinity, 50),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error loading payment configuration');
+                    }
                   }
+                  return CircularProgressIndicator();
                 },
               ),
             ],
@@ -208,5 +220,14 @@ class _AddressScreenState extends State<AddressScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    flatBuildingController.dispose();
+    areaController.dispose();
+    pincodeController.dispose();
+    cityController.dispose();
   }
 }

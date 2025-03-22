@@ -46,45 +46,49 @@ class _CartProductState extends State<CartProduct> {
               ),
             ),
             // SizedBox(width: 10),
-            Column(
-              children: [
-                Container(
-                  width: 235,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    product.productName,
-                    style: TextStyle(fontSize: 16),
-                    maxLines: 2,
+            Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    width: 235,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      product.productName,
+                      style: TextStyle(fontSize: 16),
+                      maxLines: 2,
+                    ),
                   ),
-                ),
-                Container(
-                  width: 235,
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  child: Text(
-                    '\u{20B9}${product.price}',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    maxLines: 2,
+                  Container(
+                    width: 235,
+                    padding: const EdgeInsets.only(left: 10, top: 5),
+                    child: Text(
+                      '\u{20B9}${product.price}',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                    ),
                   ),
-                ),
-                Container(
-                  width: 235,
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  child: Text(
-                    'Eligible for FREE Shipping',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    maxLines: 2,
+                  Container(
+                    width: 235,
+                    padding: const EdgeInsets.only(left: 10, top: 5),
+                    child: Text(
+                      'Eligible for FREE Shipping',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                    ),
                   ),
-                ),
-                Container(
-                  width: 235,
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  child: Text(
-                    'In stock',
-                    style: TextStyle(fontSize: 16, color: Colors.teal),
-                    maxLines: 2,
+                  Container(
+                    width: 235,
+                    padding: const EdgeInsets.only(left: 10, top: 5),
+                    child: Text(
+                      'In stock',
+                      style: TextStyle(fontSize: 16, color: Colors.teal),
+                      maxLines: 2,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
           ],
         ),

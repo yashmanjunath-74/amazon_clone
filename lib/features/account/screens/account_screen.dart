@@ -47,7 +47,7 @@ class AccountScreen extends StatelessWidget {
       ),
       body: Column(
         children: const [
-          BelowAppBar(),
+          BelowAppBar(), 
           SizedBox(
             height: 10,
           ),

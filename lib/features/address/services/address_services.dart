@@ -62,7 +62,7 @@ class AddressServices {
             'address': address,
             'totalPrice': totalSum,
           }));
-
+      print("order place function is called");
       httpErrorHandle(
         response: res,
         context: context,
@@ -75,6 +75,7 @@ class AddressServices {
         },
       );
     } catch (e) {
+      print(e);
       showSnackBar(context, e.toString());
     }
   }

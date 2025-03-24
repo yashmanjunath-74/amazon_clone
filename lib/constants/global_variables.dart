@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-String uri = 'http://192.168.233.121:3001'; // Updated to real device IP address
+String uri = 'http://10.0.2.2:3001'; // Updated to emulator IP address
 
 class GlobalVariables {
   static const appBarGradient = LinearGradient(

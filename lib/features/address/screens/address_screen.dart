@@ -26,65 +26,73 @@ class _AddressScreenState extends State<AddressScreen> {
   final _addressFormKey = GlobalKey<FormState>();
 
   List<PaymentItem> paymentItems = [];
-
   final AddressServices addressServices = AddressServices();
+
+  String addressToBeUsed = ""; // 👈 Class-level variable
 
   @override
   void initState() {
     super.initState();
-    paymentItems.add(PaymentItem(
+    paymentItems.add(
+      PaymentItem(
         amount: widget.totalamount,
-        label: 'Total amount ',
-        status: PaymentItemStatus.final_price));
+        label: 'Total amount',
+        status: PaymentItemStatus.final_price,
+      ),
+    );
+  }
+
+  void payPressed(String addressFromProvider) {
+    addressToBeUsed = "";
+    bool isForm = flatBuildingController.text.isNotEmpty ||
+        areaController.text.isNotEmpty ||
+        pincodeController.text.isNotEmpty ||
+        cityController.text.isNotEmpty;
+
+    if (isForm) {
+      if (_addressFormKey.currentState!.validate()) {
+        addressToBeUsed =
+            '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
+      } else {
+        throw Exception('Please enter all the values!');
+      }
+    } else if (addressFromProvider.isNotEmpty) {
+      addressToBeUsed = addressFromProvider;
+    } else {
+      showSnackBar(context, 'Please enter or select an address');
+    }
+    print('Address to be used: $addressToBeUsed');
+  }
+
+  void onGooglePayResult() {
+    if (addressToBeUsed.isEmpty) {
+      showSnackBar(context, 'Please enter or select an address');
+      return;
+    }
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    if (userProvider.user.address.isEmpty) {
+      addressServices.saveUserAddress(
+        context: context,
+        address: addressToBeUsed,
+      );
+    }
+
+    addressServices.placeOrder(
+      context: context,
+      address: addressToBeUsed,
+      totalSum: double.parse(widget.totalamount),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     var address = context.watch<UserProvider>().user.address;
-    print('Fetched address: $address');
-
-    String addressToBeUsed = "";
-
-    void payPressed(String addressFromProvider) {
-      addressToBeUsed = "";
-      bool isForm = flatBuildingController.text.isNotEmpty ||
-          areaController.text.isNotEmpty ||
-          pincodeController.text.isNotEmpty ||
-          cityController.text.isNotEmpty;
-
-      if (isForm) {
-        if (_addressFormKey.currentState!.validate()) {
-          addressToBeUsed =
-              '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
-        } else {
-          throw Exception('Please enter all the values!');
-        }
-      } else if (addressFromProvider.isNotEmpty) {
-        addressToBeUsed = addressFromProvider;
-      } else {
-        showSnackBar(context, 'ERROR');
-      }
-      print('Address to be used: $addressToBeUsed');
-    }
-
-    void onGooglePayResult(res) {
-      if (Provider.of<UserProvider>(context, listen: false)
-          .user
-          .address
-          .isEmpty) {
-        addressServices.saveUserAddress(
-            context: context, address: addressToBeUsed);
-
-        addressServices.placeOrder(
-            context: context,
-            address: addressToBeUsed,
-            totalSum: double.parse(widget.totalamount));
-      }
-    }
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
+        preferredSize: const Size.fromHeight(50),
         child: AppBar(
           flexibleSpace: Container(
             decoration:
@@ -99,7 +107,6 @@ class _AddressScreenState extends State<AddressScreen> {
                   'assets/images/amazon_in.png',
                   width: 120,
                   height: 45,
-                  //color: Colors.black,
                 ),
               ),
             ],
@@ -111,9 +118,7 @@ class _AddressScreenState extends State<AddressScreen> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               const Text(
                 'Select Address',
                 style: TextStyle(
@@ -121,9 +126,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -143,37 +146,36 @@ class _AddressScreenState extends State<AddressScreen> {
                       address.isNotEmpty ? address : 'No address available'),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 20,
-                child: Text('OR'),
-              ),
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
+              const Text('OR'),
+              const SizedBox(height: 20),
               Form(
                 key: _addressFormKey,
                 child: Column(
                   children: <Widget>[
                     CustomTextfield(
-                        controller: flatBuildingController,
-                        hintText: 'Flat,House no , Building'),
+                      controller: flatBuildingController,
+                      hintText: 'Flat, House no, Building',
+                    ),
                     const SizedBox(height: 10),
                     CustomTextfield(
-                        controller: areaController, hintText: 'Area,Street'),
+                      controller: areaController,
+                      hintText: 'Area, Street',
+                    ),
                     const SizedBox(height: 10),
                     CustomTextfield(
-                        controller: pincodeController, hintText: 'Pincode'),
+                      controller: pincodeController,
+                      hintText: 'Pincode',
+                    ),
                     const SizedBox(height: 10),
                     CustomTextfield(
-                        controller: cityController, hintText: 'TownCity'),
-                    const SizedBox(height: 10),
+                      controller: cityController,
+                      hintText: 'Town/City',
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               FutureBuilder<PaymentConfiguration>(
                 future: PaymentConfiguration.fromAsset('gpay.json'),
                 builder: (context, snapshot) {
@@ -191,28 +193,32 @@ class _AddressScreenState extends State<AddressScreen> {
                             loadingIndicator: const Center(
                               child: CircularProgressIndicator(),
                             ),
-                            onPaymentResult: onGooglePayResult,
+                            onPaymentResult: (_) => onGooglePayResult(),
                           ),
                           const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               payPressed(address);
-                              onGooglePayResult(null);
+                              onGooglePayResult();
                             },
-                            child: Text('Cash on Delivery',
-                                style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black,
-                              minimumSize: Size(double.infinity, 50),
+                              minimumSize: const Size(double.infinity, 50),
+                            ),
+                            child: const Text(
+                              'Cash on Delivery',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ],
                       );
                     } else if (snapshot.hasError) {
-                      return Text('Error loading payment configuration');
+                      return const Text(
+                        'Error loading payment configuration',
+                      );
                     }
                   }
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 },
               ),
             ],

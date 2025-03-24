@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const Auth = require('../middlewares/auth');
 const { Product } = require('../models/product');  // Import Product model
 const User = require('../models/user'); // Import User model
-const { Order } = require('../models/order');
+const Order  = require('../models/order');
 
 userRouter.post("/api/add-to-cart", Auth, async (req, res) => {
     try {
@@ -114,5 +114,17 @@ userRouter.post("/api/add-to-cart", Auth, async (req, res) => {
       res.status(500).json({ error: e.message});
     }
   });
+
+  userRouter.get("/api/order/me", Auth, async (req, res) => {
+    try {
+      const orders = await Order.find({ userId: req.user });
+      // console.log(orders);
+      res.json(orders);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ error: e.message });
+    }
+  });
+    
 
 module.exports = userRouter;

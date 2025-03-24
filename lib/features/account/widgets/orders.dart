@@ -2,6 +2,7 @@ import 'package:amazon_clone/common/widgets/loader.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
 import 'package:amazon_clone/features/account/services/account_services.dart';
 import 'package:amazon_clone/features/account/widgets/single_product.dart';
+import 'package:amazon_clone/features/order_details/screeens/order_detailsScreen.dart';
 import 'package:amazon_clone/models/order.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,11 @@ class _OrdersState extends State<Orders> {
   void fetchOrders() async {
     orders = await accountServices.fetchMyOrders(context: context);
     setState(() {});
+  }
+
+  void navigateTodetailScreen(Order order) {
+    Navigator.pushNamed(context, OrderDetailsscreen.routeName,
+        arguments: order);
   }
 
   @override
@@ -74,7 +80,9 @@ class _OrdersState extends State<Orders> {
                   itemCount: orders!.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        navigateTodetailScreen(orders![index]);
+                      },
                       child: SingleProduct(
                         image: orders![index].products[0].images[index],
                       ),

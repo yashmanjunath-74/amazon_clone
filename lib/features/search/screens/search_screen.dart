@@ -17,7 +17,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<ProductModel> productList = [];
+  List<ProductModel>? productList;
 
   SearchServices searchServices = SearchServices();
   @override
@@ -114,9 +114,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         return GestureDetector(
                           onTap: () => Navigator.pushNamed(
                               context, ProductDeatailsScreen.routeName,
-                              arguments: productList[index]),
+                              arguments: productList![index]),
                           child: SearchProduct(
-                            product: productList[index],
+                            product: productList![index],
                           ),
                         );
                       },

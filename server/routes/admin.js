@@ -70,4 +70,48 @@ adminRouter.get('/admin/get-orders',admin, async(req,res)=>{
          res.status(500).json({error:e.message});
       }
      });
+
+   adminRouter.get('/admin/analytics',admin, async(req,res)=>{
+      try{
+         const orders = await Order.find({});
+          let totalEarnings  = 0;
+
+          for(let i =0 ; i< orders.length; i++){
+            for(let j =0; j< orders[i].products.length; j++){
+               totalEarnings += orders[i].products[j].product.price * orders[i].products[j].quantity;
+            }
+          }
+      //Category wise earnings
+      let MobilesEarnings = await getEarnings('Mobiles');
+      let EssentialsEarnings = await getEarnings('Essentials');
+      let AppliancesEarnings = await getEarnings('Appliances');
+      let BookEarnings = await getEarnings('Books');
+      let FashionEarnings = await getEarnings('Fashion');
+
+      let earnings= {
+         totalEarnings,
+         MobilesEarnings,
+         EssentialsEarnings,
+         AppliancesEarnings,
+         BookEarnings,
+         FashionEarnings
+      };
+
+      res.json(earnings);
+     
+      }catch(e){
+         res.status(500).json({error:e.message});
+      }
+   });
+
+   async function getEarnings(category){
+      const orders = await Order.find({ 'products.product.category': category});
+      let totalEarnings = 0;
+      for(let i =0 ; i< orders.length; i++){
+         for(let j =0; j< orders[i].products.length; j++){
+            totalEarnings += orders[i].products[j].product.price * orders[i].products[j].quantity;
+         }
+      }
+      return totalEarnings;
+   }
 module.exports = adminRouter;

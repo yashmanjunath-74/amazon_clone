@@ -1,4 +1,6 @@
 import 'package:amazon_clone/constants/global_variables.dart';
+import 'package:amazon_clone/features/account/services/account_services.dart';
+import 'package:amazon_clone/features/admin/screen/analytics_screen.dart';
 import 'package:amazon_clone/features/admin/screen/orders_screen.dart';
 import 'package:amazon_clone/features/admin/screen/product_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
+  final AccountServices accountServices = AccountServices();
   int _page = 0;
   double bottomBarwidth = 48;
   double bottomBarBorderWidth = 5;
@@ -23,9 +26,7 @@ class _AdminScreenState extends State<AdminScreen> {
 
   List<Widget> ListPages = [
     const ProductScreen(),
-    const Center(
-      child: Text("Analytics page"),
-    ),
+    const AnalyticsScreen(),
     OrdersScreen(),
   ];
 
@@ -51,11 +52,25 @@ class _AdminScreenState extends State<AdminScreen> {
                   //color: Colors.black,
                 ),
               ),
-              Container(
-                child: Text(
-                  'Admin',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
+              Row(
+                children: [
+                  Container(
+                    child: Text(
+                      'Admin',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      icon: const Icon(Icons.logout_outlined),
+                      onPressed: () {
+                        AccountServices().logOut(context);
+                      },
+                    ),
+                  ),
+                ],
               )
             ],
           ),
@@ -122,7 +137,9 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
         ],
       ),
-      body: ListPages[_page],
+      body: Expanded(
+        child: ListPages[_page],
+      ),
     );
   }
 }

@@ -13,7 +13,7 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  List<ProductModel> ProductList = [];
+  List<ProductModel>? ProductList;
   final AdminServices adminServices = AdminServices();
 
   @override
@@ -32,7 +32,7 @@ class _ProductScreenState extends State<ProductScreen> {
         context: context,
         Product: product,
         Onsuccess: () {
-          ProductList.removeAt(index);
+          ProductList!.removeAt(index);
           setState(() {});
         });
   }
@@ -45,11 +45,11 @@ class _ProductScreenState extends State<ProductScreen> {
             body: Padding(
               padding: EdgeInsets.only(top: 10),
               child: GridView.builder(
-                  itemCount: ProductList.length,
+                  itemCount: ProductList!.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2),
                   itemBuilder: (context, index) {
-                    final productData = ProductList[index];
+                    final productData = ProductList![index];
                     return Column(
                       children: [
                         SizedBox(
